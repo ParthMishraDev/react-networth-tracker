@@ -1,29 +1,33 @@
 import React from 'react';
-import NetworthLineItem from './NetworthLineItem';
-import { useDispatch } from 'react-redux';
-// import { addLineItem } from '../actions/netWorth';
 import Liability from './Liability';
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 
 const Networth = (props) => {
   const netWorth = props.data;
-  const dispatch = useDispatch();
-  console.log(props.data);
-
-  const addButton = (e) => {
-    e.preventDefault();
-    // dispatch(addLineItem({type: 1, id: "a8d9bf00-5b78-4790-955c-b24097ed7b80", label: "Mortage 1", amount: 25099}));
-  }
 
   return (
-    <div>
-      <h1>Tracking your Net Worth</h1>
-      <p>Net worth: {netWorth.netWorthAmount}</p>
-      {/* {netWorth.assets.map((value, index) => {
-          return <NetworthLineItem key={index} data={{...value, dataType: 'Asset'}} />
-      })} */}
-      <Liability data={{liabilities: netWorth.liabilities, total: netWorth.totalLiabilitiesAmount}} />
-      {/* <button onClick={(e) => addButton(e)}>Add</button> */}
+    <div className="border">
+      <Container className="w-50">
+        <h1 className="pb-3">Tracking your Net Worth</h1>
+        <Row>
+          <Col>
+            <h4 className="text-success">
+              <span>Net Worth</span>
+              <span className="float-right">$ {netWorth.netWorthAmount}</span>
+            </h4>
+          </Col>
+        </Row>
+        <hr className="border border-dark"/>
+        <Row>
+          <Col>
+            <Liability data={{liabilities: netWorth.liabilities, total: netWorth.totalLiabilitiesAmount}} />
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };

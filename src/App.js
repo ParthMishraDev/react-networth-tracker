@@ -3,7 +3,7 @@ import Networth from './components/Networth';
 import './App.css';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { fetchNetWorth } from './actions';
-import { getNetWorth, getNetWorthPending } from './reducers';
+import { getNetWorth, getNetWorthPending } from './selectors';
 
 const App = () => {
 

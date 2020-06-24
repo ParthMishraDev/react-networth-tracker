@@ -77,6 +77,7 @@ export const fetchNetWorth = () => {
 
 export const updateNetWorth = () => {
     return (dispatch, getState) => {
+        console.log('got here');
         dispatch(updateNetworthPending)
         return fetch('https://localhost:44305/networth', { method: 'PUT', body: JSON.stringify(getState().networth), headers: { 'Content-Type': 'application/json'}})
                 .then(response => response.json())

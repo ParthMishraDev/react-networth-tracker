@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import { Liability } from "../Components/Liability";
+import { Liability } from "../components/NetworthLineItem";
 import { useFetch } from "../hooks/use-api";
 
 const NetWorthContext = createContext();
