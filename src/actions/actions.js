@@ -1,3 +1,5 @@
+import 'cross-fetch/polyfill'
+
 export const FETCH_NETWORTH_PENDING = 'FETCH_NETWORTH_PENDING';
 export const FETCH_NETWORTH_SUCCESS = 'FETCH_NETWORTH_SUCCESS';
 export const FETCH_NETWORTH_ERROR = 'FETCH_NETWORTH_ERROR';
