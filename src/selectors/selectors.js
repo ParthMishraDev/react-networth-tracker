@@ -2,7 +2,8 @@ import { createSelector } from "reselect";
 import { groupBy } from "../utils/groupBy";
 
 export const getNetWorth = state => state.networth;
-export const getLiabilitiesTotalAmount = state => state.networth.totalLiabilitiesAmount
+export const getLiabilitiesTotalAmount = state => state.networth.totalLiabilitiesAmount;
+export const getAssetsTotalAmount = state => state.networth.totalAssetsAmount;
 export const getNetWorthPending = state => state.pending;
 export const getNetWorthError = state => state.error;
 

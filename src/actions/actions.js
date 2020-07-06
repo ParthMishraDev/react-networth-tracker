@@ -6,9 +6,11 @@ export const UPDATE_NETWORTH_PENDING = 'UPDATE_NETWORTH_PENDING';
 export const UPDATE_NETWORTH_SUCCESS = 'UPDATE_NETWORTH_SUCCESS';
 export const UPDATE_NETWORTH_ERROR = 'UPDATE_NETWORTH_ERROR';
 
-export const UPDATE_LINE_ITEM = 'UPDATE_LINE_ITEM';
 export const ADD_LINE_ITEM = 'ADD_LINE_ITEM';
+export const UPDATE_LINE_ITEM = 'UPDATE_LINE_ITEM';
+export const DELETE_LINE_ITEM = 'DELETE_LINE_ITEM';
 
+// Get
 export const fetchNetworthPending = () => {
     return {
         type: FETCH_NETWORTH_PENDING
@@ -29,6 +31,7 @@ export const fetchNetworthError = (error) => {
     }
 }
 
+// Update
 export const updateNetworthPending = () => {
     return {
         type: UPDATE_NETWORTH_PENDING
@@ -49,7 +52,6 @@ export const updateNetworthError = (error) => {
     }
 }
 
-
 // Line item
 export const updateLineItem = (lineItem) => {
     return {
@@ -61,6 +63,13 @@ export const updateLineItem = (lineItem) => {
 export const addLineItem = (lineItem) => {
     return {
         type: ADD_LINE_ITEM,
+        payload: lineItem
+    }
+}
+
+export const deleteLineItem = (lineItem) => {
+    return {
+        type: DELETE_LINE_ITEM,
         payload: lineItem
     }
 }
@@ -77,8 +86,7 @@ export const fetchNetWorth = () => {
 
 export const updateNetWorth = () => {
     return (dispatch, getState) => {
-        console.log('got here');
-        dispatch(updateNetworthPending)
+        dispatch(updateNetworthPending());
         return fetch('https://localhost:44305/networth', { method: 'PUT', body: JSON.stringify(getState().networth), headers: { 'Content-Type': 'application/json'}})
                 .then(response => response.json())
                 .then(json => dispatch(updateNetworthSuccess(json)));

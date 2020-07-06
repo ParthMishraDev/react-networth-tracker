@@ -1,26 +1,27 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { getLiabilitiesSelector, getLiabilitiesTotalAmount } from '../selectors';
 import LineItem from './LineItem';
-import { LiabilityType } from '../enums';
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
+import { LiabilityType } from '../enums';
 import { generateGuid } from '../utils/guidGenerator';
-import { addLineItem } from '../actions';
+import { addLineItem, updateNetWorth } from '../actions';
 
 const Liability = () => {
 
     const liability = useSelector(getLiabilitiesSelector());
-    const total = useSelector(getLiabilitiesTotalAmount);
+    const total = useSelector(getLiabilitiesTotalAmount, shallowEqual);
     const dispatch = useDispatch();
 
     const addLiability = (event, type) => {
         event.preventDefault();
-        dispatch(addLineItem({type, id: generateGuid(), label: '', amount: 0}));
+        dispatch(addLineItem({networthType: 'Liability', type, id: generateGuid(), label: '', amount: 0}));
+        dispatch(updateNetWorth());
       }
 
     return (
@@ -39,7 +40,7 @@ const Liability = () => {
           </Row>
           <hr className="border border-dark" />
           {Object.keys(liability).map((key, keyIndex) => (
-              <div key={keyIndex}>
+              <div key={keyIndex + '_liabilities'}>
                   <h5>{LiabilityType[key]}</h5>
                   <ul>
                       {liability[key].map((value, index) => {

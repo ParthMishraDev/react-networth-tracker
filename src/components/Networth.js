@@ -1,4 +1,5 @@
 import React from 'react';
+import Asset from './Asset';
 import Liability from './Liability';
 
 import Container from 'react-bootstrap/Container';
@@ -24,7 +25,13 @@ const Networth = (props) => {
         <hr className="border border-dark"/>
         <Row>
           <Col>
-            <Liability data={{liabilities: netWorth.liabilities, total: netWorth.totalLiabilitiesAmount}} />
+            <Asset />
+          </Col>
+        </Row>
+        <hr className="border border-dark"/>
+        <Row>
+          <Col>
+            <Liability />
           </Col>
         </Row>
       </Container>
