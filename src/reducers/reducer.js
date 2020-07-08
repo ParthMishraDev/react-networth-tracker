@@ -68,7 +68,6 @@ export const netWorthReducer = (state = initialState, action) => {
                 }
             }
         case UPDATE_LINE_ITEM:
-            console.log(action.payload);
             if (action.payload.networthType === 'Liability') {
                 return { 
                     ...state, 

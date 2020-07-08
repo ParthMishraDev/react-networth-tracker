@@ -82,7 +82,8 @@ export const fetchNetWorth = () => {
         dispatch(fetchNetworthPending());
         return fetch('https://localhost:44305/networth')
                 .then(response => response.json())
-                .then(json => dispatch(fetchNetworthSuccess(json)));
+                .then(json => dispatch(fetchNetworthSuccess(json)))
+                .catch(err => dispatch(fetchNetworthError(err)));
     }
 }
 
@@ -91,6 +92,7 @@ export const updateNetWorth = () => {
         dispatch(updateNetworthPending());
         return fetch('https://localhost:44305/networth', { method: 'PUT', body: JSON.stringify(getState().networth), headers: { 'Content-Type': 'application/json'}})
                 .then(response => response.json())
-                .then(json => dispatch(updateNetworthSuccess(json)));
+                .then(json => dispatch(updateNetworthSuccess(json)))
+                .catch(err => dispatch(updateNetworthError(err)));
     }
 }

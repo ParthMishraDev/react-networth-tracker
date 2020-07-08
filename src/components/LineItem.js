@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext, useRef, useEffect } from 'react';
 import { updateNetWorth, updateLineItem, deleteLineItem } from '../actions';
 import { useDispatch } from 'react-redux';
 
@@ -6,15 +6,23 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { SettingsContext } from '../contexts/SettingsContext';
+import { debounce } from 'lodash';
 
 const LineItem = (props) => {
   const { amount, label } = props.data;
+
+  const errorMsg = useRef(null)
+  const inputRef = useRef(null);
   
   const [valid, setValid] = useState(true);
   const [editLabel, setEditLabel] = useState(false);
   const [labelValue, setLabelValue] = useState(label);
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
+  const { settings } = useContext(SettingsContext);
+
+  // Validation
   const handleValidation = useCallback((event) =>  {
     if (isNaN(event.target.value)) {
       setValid(false);
@@ -22,13 +30,28 @@ const LineItem = (props) => {
     }
 
     if (Number(event.target.value) < 0) {
+      errorMsg.current = 'Please enter a positive number';
+      setValid(false);
+      return;
+    }
+
+    if (Number(event.target.value) > settings.maxValue || Number(event.target.value) < settings.minValue) {
+      errorMsg.current = `It should be between ${settings.minValue} to ${settings.maxValue}`;
       setValid(false);
       return;
     }
 
     setValid(true);
-  }, []);
+  }, [settings]);
 
+  useEffect(() => {
+    if (Number(inputRef.current.value) > settings.maxValue || Number(inputRef.current.value) < settings.minValue ) {
+      errorMsg.current = `It should be between ${settings.minValue} to ${settings.maxValue}`;
+      setValid(false);
+    }
+  }, [settings])
+
+  // Modifying Line items
   const deleteLine = useCallback(() => {
     dispatch(deleteLineItem({...props.data}));
     dispatch(updateNetWorth());
@@ -43,16 +66,21 @@ const LineItem = (props) => {
     }
   }, [dispatch, props])
 
-  const updateAmount = useCallback((e) => {
-    dispatch(updateLineItem({...props.data, amount: e.target.value}))
+  const updateAmount = useCallback(() => {
     if (valid) {
       dispatch(updateNetWorth())
     }
-  }, [dispatch, valid, props]);
+  }, [dispatch, valid]);
+
+  const updateAmountDebounce = useCallback(debounce(() => {
+    if (valid) {
+      dispatch(updateNetWorth())
+    }
+  }, 800), [dispatch, valid]);
 
   return (
     <>
-      <Form.Group as={Row}>
+      <Form.Group as={Row} style={{position: 'relative'}}>
         { label !== '' && editLabel === false ? 
           <Col className="mt-2">
             <Form.Label>{labelValue}</Form.Label>
@@ -90,15 +118,21 @@ const LineItem = (props) => {
               custom={false} 
               isInvalid={valid === false} 
               type="number" 
-              value={amount} 
+              value={amount}
+              ref={inputRef} 
               onChange={(e) => {
                 handleValidation(e);
-                updateAmount(e)
+                dispatch(updateLineItem({...props.data, amount: e.target.value}));
+                if (settings.debounce) {
+                  updateAmountDebounce()
+                } else {
+                  updateAmount();
+                }
             }} >
           </Form.Control>
           <Form.Control.Feedback type="invalid">
-            Please enter a positive number
-        </Form.Control.Feedback>
+            { errorMsg.current ? errorMsg.current : null}
+          </Form.Control.Feedback>
         </InputGroup>
         </Col>
       </Form.Group>
